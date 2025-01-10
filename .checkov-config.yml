@@ -1,5 +1,5 @@
 block-list-secret-scan: []
-branch: master
+branch: main
 directory:
   - ./
 download-external-modules: false
@@ -13,12 +13,6 @@ skip-check:
   # Github: Ensure top-level permissions are not set to write-all
   - CKV2_GHA_1
   - CKV_GHA_3
-  - CKV_AZURE_119
-  # Check following rules after v4.0
-  - CKV2_AZURE_18
-  - CKV2_AZURE_1
-  - CKV2_AZURE_10
-  - CKV2_AZURE_12
 skip-framework:
   - dockerfile
   - kubernetes

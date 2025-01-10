@@ -1,1 +1,4 @@
-.github
+examples
+tests
+wrappers
+.tfdocs-config

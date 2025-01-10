@@ -1,1 +1,1 @@
-Niek Palm <niek.palm@philips.com>
+Alexander Sharov <kvendingoldo@gmail.com>
