@@ -1,5 +1,5 @@
 name: New Module Request
-description: Request a new Azure verified module.
+description: Request a new verified module.
 title: "[Module]: "
 labels: ["module"]
 body:
@@ -12,7 +12,7 @@ body:
     attributes:
       label: Module Scenario
       description: Please describe the scenario this module should address.
-      placeholder: This module should allow me to manage an Azure Web App with a public IP address.
+      placeholder: This module should allow me to manage an AWS ALB with a public IP address.
     validations:
       required: true
   - type: input
@@ -20,15 +20,9 @@ body:
     attributes:
       label: Proposed module name
       description: Please provide a name for the proposed module.
-      placeholder: terraform-azure-public-web-app
+      placeholder: terraform-yourprovider-module-template-new-module
     validations:
       required: true
-  - type: input
-    id: existing-module-link
-    attributes:
-      label: Link to existing example module
-      description: Is there an existing module that already covers this scenario that should be onboarded to verified modules? If there is a similar Azure module that has been published to the Terraform regisrty or exists in a github repo, please provide a link.
-      placeholder: https://registry.terraform.io/modules/Azure/naming/azurerm/latest
   - type: textarea
     id: included-resources
     attributes:
@@ -37,9 +31,7 @@ body:
         What resources do expect this module to contain?
         _Note: this content will be automatically formatted as Markdown._
       placeholder: |
-        - azurerm_virtual_network
-        - azurerm_linux_web_app
-        - azurerm_subnet
+        - aws_lb
       render: Markdown
   - type: textarea
     id: inputs
@@ -51,8 +43,6 @@ body:
       placeholder: |
         | Name | Required | Default |
         | name | yes |  |
-        | resource_group_name | yes |  |
-        | location | no | westus2 |
       render: Markdown
     validations:
       required: true

@@ -1,0 +1,43 @@
+name: "Versioning"
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+    branches:
+      - "**"
+
+concurrency:
+  group: ci-pipeline-${{ github.workflow }}-${{ github.event.pull_request.number || github.event.pull_request.head.ref || github.ref }}
+
+jobs:
+  semver:
+    name: "Set code version tag"
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        if: github.event_name == 'pull_request'
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        if: github.event_name == 'push'
+        with:
+          fetch-depth: 0
+
+      - name: Set application version
+        id: set_version
+        uses: kvendingoldo/semver-action@v1.20
+        with:
+          enable_github_releases: true
+          release_tag_prefix: "v"
+          # Activate the ability to create GitHub releases
+          github_token: "${{ secrets.GITHUB_TOKEN }}"

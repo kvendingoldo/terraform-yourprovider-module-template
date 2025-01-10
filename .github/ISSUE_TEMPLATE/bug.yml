@@ -12,7 +12,7 @@ body:
     attributes:
       label: Module Name
       description: Name of the module that has a bug.
-      placeholder: terraform-azure-network
+      placeholder: terraform-yourprovider-module-template
     validations:
       required: true
   - type: textarea

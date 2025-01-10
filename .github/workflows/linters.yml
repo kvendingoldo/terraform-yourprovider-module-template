@@ -1,0 +1,91 @@
+name: "Linters"
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+    branches:
+      - "**"
+
+permissions: read-all
+
+env:
+  tf_version: 1.3.9
+  tflint_version: v0.45.0
+
+jobs:
+  super-linter:
+    name: "Super Linter"
+    runs-on: ubuntu-22.04
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Super-Linter
+        uses: github/super-linter@v5
+        env:
+          VALIDATE_YAML: true
+          VALIDATE_JSON: true
+          DEFAULT_BRANCH: main
+          # Activate reporting to GitHub Actions status checks
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LINTER_RULES_PATH: .github/linter-rules
+
+  linters:
+    name: "Terraform Linters"
+    runs-on: ubuntu-22.04
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.tf_version }}
+          terraform_wrapper: false
+
+      - name: Setup TFLint
+        uses: terraform-linters/setup-tflint@v4
+        with:
+          tflint_version: ${{ env.tflint_version }}
+
+      - name: Setup TFLint cache plugin dir
+        uses: actions/cache@v4.1.2
+        with:
+          path: ~/.tflint.d/plugins
+          key: tflint-${{ hashFiles('.tflint.hcl') }}
+
+      - name: Test code with terraform fmt
+        run: terraform fmt --recursive -check=true --diff
+        continue-on-error: true
+
+      - name: Test code with TFLint
+        continue-on-error: true
+        run: |
+          tflint --init
+          tflint -f compact
+
+      - name: Test code with TFSec
+        continue-on-error: true
+        uses: aquasecurity/tfsec-action@v1.0.3
+        with:
+          soft_fail: true
+
+      - name: Test code with Checkov
+        uses: bridgecrewio/checkov-action@v12.2940.0
+        with:
+          directory: /
+          framework: terraform
+          soft_fail: true
+          quiet: true
+          download_external_modules: false

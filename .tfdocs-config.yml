@@ -1,18 +1,21 @@
+### To generate the output file to partially incorporate in the README.md,
+### Execute this command in the Terraform module's code folder:
+# terraform-docs -c .tfdocs-config.yml .
+
 formatter: "markdown table" # this is required
 
-version: ">= 0.13.0, < 1.0.0"
+version: ">= 0.13.0"
 
 # header-from: main.tf
 # footer-from: ""
 
-# recursive:
-#   enabled: false
-#   path: modules
+recursive:
+  enabled: true
+  path: modules
 
 sections:
   hide: []
   show: []
-
 
 content: |-
   ----
@@ -42,7 +45,6 @@ content: |-
   {{ include "/excluded_scoped_actions.tf" }}
   ```
 
-
 output:
   file: README.md
   mode: inject
@@ -50,7 +52,6 @@ output:
     <!-- BEGIN_TF_DOCS -->
     {{ .Content }}
     <!-- END_TF_DOCS -->
-
 
 output-values:
   enabled: false
