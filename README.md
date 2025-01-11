@@ -15,7 +15,6 @@ module. If contributing to the project, please be sure to make any appropriate u
 maintainers to test your changes and to keep the examples up to date for users. Thank you!
 
 <!-- BEGIN_TF_DOCS -->
----
 ### Requirements
 
 | Name | Version |
