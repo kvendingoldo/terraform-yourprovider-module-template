@@ -24,5 +24,6 @@
  */
 
 output "instance_id" {
-  value = aws_instance.example.id
+  description = "AWS EC2 instance id"
+  value       = aws_instance.example.id
 }

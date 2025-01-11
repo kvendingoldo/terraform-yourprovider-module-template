@@ -18,31 +18,24 @@ sections:
   show: []
 
 content: |-
-  ----
-  ## Documentation
-
-  ----
-  {{ .Inputs }}
-
-  ----
-  {{ .Modules }}
-
-  ----
-  {{ .Outputs }}
+  ---
+  {{ .Requirements }}
 
   ----
   {{ .Providers }}
 
   ----
-  {{ .Requirements }}
+  {{ .Modules }}
 
   ----
   {{ .Resources }}
 
   ----
-  ### Default excluded scoped actions
-  ```hcl
-  {{ include "/excluded_scoped_actions.tf" }}
+  {{ .Inputs }}
+
+  ----
+  {{ .Outputs }}
+
   ```
 
 output:

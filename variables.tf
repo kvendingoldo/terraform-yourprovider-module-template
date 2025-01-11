@@ -24,6 +24,7 @@
  */
 
 variable "ami_id" {
-  type    = string
-  default = "ami-0c55b159cbfafe1f0"  # Example Amazon Linux AMI (update as needed)
+  description = "The default AWS EC2 AMI"
+  type        = string
+  default     = "ami-0c55b159cbfafe1f0"
 }
