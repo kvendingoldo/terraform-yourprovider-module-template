@@ -59,7 +59,6 @@ No modules.
   <img src="https://contrib.rocks/image?repo=kvendingoldo/terraform-module-template" />
 </a>
 
-
 <a href="https://star-history.com/#kvendingoldo/terraform-module-template&Date">
   <picture>
     <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=kvendingoldo/terraform-module-template&type=Date" />
