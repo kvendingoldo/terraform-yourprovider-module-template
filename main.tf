@@ -30,4 +30,3 @@ resource "aws_instance" "example" {
     Name = local.name
   }
 }
-
