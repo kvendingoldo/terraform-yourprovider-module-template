@@ -1,6 +1,10 @@
-### To generate the output file to partially incorporate in the README.md,
-### Execute this command in the Terraform module's code folder:
+#
+# To generate the output file to partially incorporate in the README.md,
+# execute this command in the Terraform module's code folder:
 # terraform-docs -c .tfdocs-config.yml .
+#
+# In case of using `pre-commit run -a` command, this file will be used automatically.
+#
 
 formatter: "markdown table" # this is required
 
@@ -18,25 +22,17 @@ sections:
   show: []
 
 content: |-
-  ---
   {{ .Requirements }}
 
-  ----
   {{ .Providers }}
 
-  ----
   {{ .Modules }}
 
-  ----
   {{ .Resources }}
 
-  ----
   {{ .Inputs }}
 
-  ----
   {{ .Outputs }}
-
-  ```
 
 output:
   file: README.md
