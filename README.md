@@ -6,7 +6,7 @@
 
 Terraform module which creates <RESOURCE_NAMES> resources.
 
-## Examples
+# Examples
 
 Examples codified under
 the [`examples`](https://github.com/kvendingoldo/terraform-module-template/tree/main/examples) are intended
@@ -15,12 +15,6 @@ module. If contributing to the project, please be sure to make any appropriate u
 maintainers to test your changes and to keep the examples up to date for users. Thank you!
 
 <!-- BEGIN_TF_DOCS -->
-### Requirements
-
-| Name | Version |
-|------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0.0 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 5.0 |
 
 ### Providers
 
