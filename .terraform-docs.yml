@@ -22,7 +22,6 @@ sections:
   show: []
 
 content: |-
-  ---
   {{ .Requirements }}
 
   {{ .Providers }}
@@ -65,3 +64,4 @@ settings:
   required: true
   sensitive: true
   type: true
+  header-from: 2
