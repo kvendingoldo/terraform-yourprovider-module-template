@@ -1,20 +1,17 @@
 #
-# To generate the output file to partially incorporate to the README.md,
-# execute this command in repository's folder: `terraform-docs -c .terraform-docs.yml .`.
+# terraform-docs helps to generate an output file that will be partially incorporated into the README.md.
 #
-# In case of using `pre-commit run -a` command, this file will be used automatically.
+# Usage:
+#   * cli: `terraform-docs -c .terraform-docs.yml .`.
+#   * pre-commit: `pre-commit run -a`
 #
 
 formatter: "markdown table"
 
 version: ">= 0.13"
 
-# header-from: main.tf
-# footer-from: ""
-
 recursive:
   enabled: true
-  path: modules
 
 sections:
   hide: []
@@ -57,7 +54,7 @@ settings:
   escape: true
   hide-empty: false
   html: true
-  indent: 3
+  indent: 2
   lockfile: false
   read-comments: true
   required: true

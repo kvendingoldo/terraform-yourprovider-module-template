@@ -23,14 +23,12 @@
  *
  */
 
-variable "name" {
-  default     = "The name of AWS EC2 VM"
-  type        = string
-  description = "terraform-module-template"
-}
-
-variable "ami_id" {
-  description = "The default AWS EC2 AMI"
-  type        = string
-  default     = "ami-0c55b159cbfafe1f0"
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+  }
+  required_version = ">= 1.0.0"
 }

@@ -14,19 +14,19 @@ import (
 func TestAwsEC2Instance(t *testing.T) {
 	// Define Terraform options to point to the Terraform folder
 	terraformOptions := &terraform.Options{
-		TerraformDir: "../aws_ec2_example",
+		TerraformDir: "../../",
 		Vars: map[string]interface{}{
 			"ami_id": "ami-0c55b159cbfafe1f0",
 		},
 	}
 
-	// At the end of the test, destroy the resources
+	// At the end of the test, destroy all Terraform resources
 	defer terraform.Destroy(t, terraformOptions)
 
 	// Init and apply the Terraform configuration
 	terraform.InitAndApply(t, terraformOptions)
 
-	// Fetch the output variable
+	// Fetch the output variables
 	instanceID := terraform.Output(t, terraformOptions, "instance_id")
 
 	// Run a simple assertion to ensure the instance ID is not empty

@@ -12,7 +12,7 @@ body:
     attributes:
       label: Module Name
       description: Name of the module that has a bug.
-      placeholder: terraform-yourprovider-module-template
+      placeholder: terraform-module-template
     validations:
       required: true
   - type: textarea

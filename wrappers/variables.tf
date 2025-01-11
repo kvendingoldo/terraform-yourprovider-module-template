@@ -23,14 +23,14 @@
  *
  */
 
-variable "name" {
-  default     = "The name of AWS EC2 VM"
-  type        = string
-  description = "terraform-module-template"
+variable "defaults" {
+  description = "Map of default values which will be used for each item."
+  type        = any
+  default     = {}
 }
 
-variable "ami_id" {
-  description = "The default AWS EC2 AMI"
-  type        = string
-  default     = "ami-0c55b159cbfafe1f0"
+variable "items" {
+  description = "Maps of items to create a wrapper from. Values are passed through to the module."
+  type        = any
+  default     = {}
 }

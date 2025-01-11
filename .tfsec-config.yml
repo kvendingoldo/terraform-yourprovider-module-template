@@ -1,16 +1,8 @@
-# https://aquasecurity.github.io/tfsec
-
-# Checks available at:
-# https://aquasecurity.github.io/tfsec/v0.61.0/checks/aws/api-gateway/enable-access-logging/
-
-# INSTALL ON MAC:
-# brew install tfsec
-
-# INSTALL ON WINDOWS:
-# choco install tfsec
-
-# USAGE:
-# tfsec --config-file .tfsec.config.yml
+#
+# tfsec helps to keep the code save.
+#
+# Usage: `tfsec --config-file .tfsec.config.yml`
+#
 
 ---
 exclude: []

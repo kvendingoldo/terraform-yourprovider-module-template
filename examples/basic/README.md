@@ -2,20 +2,13 @@
 
 Documentation for the `basic` case.
 
-## Examples
-
-Examples codified under
-the [`examples`](https://github.com/terraform-yacloud-modules/terraform-yandex-module-template/tree/main/examples) are intended
-to give users references for how to use the module(s) as well as testing/validating changes to the source code of the
-module. If contributing to the project, please be sure to make any appropriate updates to the relevant examples to allow
-maintainers to test your changes and to keep the examples up to date for users. Thank you!
-
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 5.0 |
 
 ## Providers
 
@@ -23,7 +16,9 @@ No providers.
 
 ## Modules
 
-No modules.
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_terraform_module_template"></a> [terraform\_module\_template](#module\_terraform\_module\_template) | ../../ | n/a |
 
 ## Resources
 
@@ -36,7 +31,7 @@ No inputs.
 ## Outputs
 
 No outputs.
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- END_TF_DOCS -->
 
 ## License
 

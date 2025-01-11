@@ -20,7 +20,7 @@ body:
     attributes:
       label: Proposed module name
       description: Please provide a name for the proposed module.
-      placeholder: terraform-yourprovider-module-template-new-module
+      placeholder: terraform-module-template
     validations:
       required: true
   - type: textarea

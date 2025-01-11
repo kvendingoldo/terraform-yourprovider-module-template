@@ -23,6 +23,8 @@
  *
  */
 
-locals {
-  name = "terraform-module-template-example"
+output "wrapper" {
+  description = "Map of outputs of a wrapper."
+  value       = module.wrapper
+  #sensitive   = true
 }

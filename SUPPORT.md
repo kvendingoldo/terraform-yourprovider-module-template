@@ -13,7 +13,7 @@ If you encounter an issue, have a question, or need assistance, here are the ava
 - Use the search feature to quickly find answers to your questions.
 
 ### 2. Check Existing Issues
-- Review the [GitHub Issues](https://github.com/your-org/your-repo/issues) to see if your problem has already been reported or addressed.
+- Review the [GitHub Issues](https://github.com/kvendingoldo/terraform-module-template/issues) to see if your problem has already been reported or addressed.
 - Look for workarounds or updates provided by maintainers or the community.
 
 ### 3. Community Support
@@ -22,7 +22,7 @@ If you encounter an issue, have a question, or need assistance, here are the ava
 
 ### 4. Open a New Issue
 If your issue isn't addressed in the documentation or existing discussions:
-1. Go to the [GitHub Issues page](https://github.com/your-org/your-repo/issues).
+1. Go to the [GitHub Issues page](https://github.com/kvendingoldo/terraform-module-template/issues).
 2. Select the appropriate issue template (e.g., bug report, feature request).
 3. Provide a detailed description, including:
    - Steps to reproduce the issue.
@@ -46,5 +46,3 @@ If you'd like to contribute to the project by fixing bugs, enhancing features, o
 ## Thank You!
 
 We appreciate your interest and involvement in [Project Name]. Your feedback, questions, and contributions help make the project better for everyone. Feel free to reach out through any of the channels listed above.
-
----
