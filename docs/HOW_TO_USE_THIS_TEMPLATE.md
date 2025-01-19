@@ -39,6 +39,7 @@ Do the following steps:
 * `.github/ISSUE_TEMPLATES`: replace `terraform-module-template` with `<your_repo>`.
 * `.github/workflows/linters.yml`: specify your Terraform version (default is `1.5.7`), and update the TFLint version if necessary (default is `0.54.0`).
 * Check `.github/CONTRIBUTING.md` to match organizational policies.
+* Change or delete `.github/FUNDING.yml`. It configures funding links to platforms like GitHub Sponsors, Patreon, etc.
 
 ## functions Directory
 Remove this folder if no custom functions are implemented (e.g. it can be AWS lambda or anything like that).

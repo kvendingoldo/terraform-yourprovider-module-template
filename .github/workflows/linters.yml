@@ -12,10 +12,10 @@ permissions: read-all
 env:
   tf_version: 1.5.7
   tflint_version: v0.54.0
+  trivy_version: v0.58.2
 
 jobs:
   super-linter:
-    name: "Super Linter"
     runs-on: ubuntu-22.04
     defaults:
       run:
@@ -36,8 +36,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LINTER_RULES_PATH: .github/linter-rules
 
-  linters:
-    name: "Terraform Linters"
+  terraform-fmt:
     runs-on: ubuntu-22.04
     defaults:
       run:
@@ -54,6 +53,78 @@ jobs:
           terraform_version: ${{ env.tf_version }}
           terraform_wrapper: false
 
+      - name: Test code with terraform fmt
+        run: terraform fmt --recursive -check=true -no-color
+        continue-on-error: false
+
+      - name: Auto Commit Changes
+        if: steps.create_pr.outputs.pull-request-operation == 'created'
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Terraform fmt"
+          file_pattern: "*.tf"
+          commit_user_name: "github-actions[bot]"
+
+  trivy:
+    runs-on: ubuntu-22.04
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Trivy
+        uses: aquasecurity/setup-trivy@v0.2.2
+        with:
+          cache: true
+          version: ${{ env.trivy_version }}
+
+      - name: Test code with Trivy vulnerability scanner
+        id: trivy
+        uses: aquasecurity/trivy-action@0.29.0
+        with:
+          scan-type: "fs" # filesystem scanner
+          scan-ref: "." # whole repo
+          trivy-config: trivy.yaml # Use our config file
+          skip-setup-trivy: true # We used the separate setup step to enable caching
+        continue-on-error: true # By default, error would end the workflow
+
+      - name: Report Trivy status to PR
+        uses: actions/github-script@v7
+        if: github.event_name == 'pull_request'
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const report = fs.readFileSync('./apps/alpha/trivy-report.txt', 'utf8');
+            const output = `Trivy report:
+            \`\`\`\n
+            ${report.length > 0 ? report : 'No issues found'}
+            \`\`\`
+
+            *Pushed by: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            })
+
+  tflint:
+    runs-on: ubuntu-22.04
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Setup TFLint
         uses: terraform-linters/setup-tflint@v4
         with:
@@ -65,21 +136,40 @@ jobs:
           path: ~/.tflint.d/plugins
           key: tflint-${{ hashFiles('.tflint.hcl') }}
 
-      - name: Test code with terraform fmt
-        run: terraform fmt --recursive -check=true --diff
-        continue-on-error: true
-
       - name: Test code with TFLint
         continue-on-error: true
         run: |
           tflint --init
           tflint -f compact
 
+  tfsec:
+    runs-on: ubuntu-22.04
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Test code with TFSec
         continue-on-error: true
         uses: aquasecurity/tfsec-action@v1.0.3
         with:
           soft_fail: true
+          github_token: ${{ github.token }}
+
+  checkov:
+    runs-on: ubuntu-22.04
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Test code with Checkov
         uses: bridgecrewio/checkov-action@v12.2940.0
@@ -89,3 +179,10 @@ jobs:
           soft_fail: true
           quiet: true
           download_external_modules: false
+          output_format: cli,sarif
+          output_file_path: console,results.sarif
+
+      - name: Report Checkov status (upload SARIF file)
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: results.sarif
