@@ -1,0 +1,17 @@
+timeout: 5m0s
+exit-code: 1
+# format: "sarif"
+# output: "sarif-1.sarif"
+# Report will be created in table format, and saved to app-specific directory
+format: "table"
+output: "./trivy-report.txt"
+report: "all"
+misconfiguration:
+  scanners:
+    - terraform
+  terraform:
+    vars: []
+scan:
+  scanners:
+    - secret
+    - misconfig
