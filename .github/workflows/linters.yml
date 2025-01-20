@@ -72,7 +72,7 @@ jobs:
         env:
           VALIDATE_YAML: true
           VALIDATE_JSON: true
-                    VALIDATE_SHELL_SHFMT: true
+          VALIDATE_SHELL_SHFMT: true
           DEFAULT_BRANCH: main
           # Activate reporting to GitHub Actions status checks
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
