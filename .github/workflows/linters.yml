@@ -74,16 +74,16 @@ jobs:
           #
           # fix
           #
-          FIX_YAML_PRETTIER: ${{ steps.set_version.outputs.fix_linter_issues }}
-          FIX_JSON: ${{ steps.set_version.outputs.fix_linter_issues }}
-          FIX_JSON_PRETTIER: ${{ steps.set_version.outputs.fix_linter_issues }}
-          FIX_SHELL_SHFMT: ${{ steps.set_version.outputs.fix_linter_issues }}
+          FIX_YAML_PRETTIER: ${{ steps.set_job_variables.outputs.fix_linter_issues }}
+          FIX_JSON: ${{ steps.set_job_variables.outputs.fix_linter_issues }}
+          FIX_JSON_PRETTIER: ${{ steps.set_job_variables.outputs.fix_linter_issues }}
+          FIX_SHELL_SHFMT: ${{ steps.set_job_variables.outputs.fix_linter_issues }}
 
           DEFAULT_BRANCH: ${{ env.default_branch }}
           # Activate reporting to GitHub Actions status checks
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LINTER_RULES_PATH: .github/linter-rules
-        continue-on-error: ${{ steps.set_version.outputs.continue_on_error }}
+        continue-on-error: ${{ steps.set_job_variables.outputs.continue_on_error }}
 
       - name: Commit and push linting fixes
         # Run only on:
