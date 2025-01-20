@@ -1,0 +1,18 @@
+asd: []
+asd:
+
+name: John Doe
+age: 30
+  address:
+ street: 123 Main St
+ city: Metropolis
+state NY
+  zip: 12345
+languages:
+  - English
+ - Spanish
+ - French
+
+notes: This is a multiline note
+that does not follow proper YAML
+syntax.
