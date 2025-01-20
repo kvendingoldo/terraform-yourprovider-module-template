@@ -30,7 +30,10 @@ jobs:
   super-linter:
     runs-on: ubuntu-22.04
     permissions:
+      # To write linting fixes
       contents: write
+      # To write Super-linter status checks
+      statuses: write
     defaults:
       run:
         shell: bash
@@ -49,11 +52,13 @@ jobs:
           #
           VALIDATE_YAML: true
           VALIDATE_JSON: true
+          VALIDATE_SHELL_SHFMT: true
           #
           # fix
           #
           FIX_YAML_PRETTIER: true
           FIX_JSON_PRETTIER: true
+          FIX_SHELL_SHFMT: true
 
           DEFAULT_BRANCH: main
           # Activate reporting to GitHub Actions status checks
@@ -67,6 +72,7 @@ jobs:
         env:
           VALIDATE_YAML: true
           VALIDATE_JSON: true
+                    VALIDATE_SHELL_SHFMT: true
           DEFAULT_BRANCH: main
           # Activate reporting to GitHub Actions status checks
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
