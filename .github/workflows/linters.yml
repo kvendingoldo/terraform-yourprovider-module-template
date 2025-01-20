@@ -45,7 +45,7 @@ jobs:
 
       - name: Run Super-Linter
         if: github.event_name == 'pull_request'
-        uses: github/super-linter@v7.1.0
+        uses: super-linter/super-linter@v7.1.0
         env:
           #
           # validate
@@ -68,7 +68,7 @@ jobs:
 
       - name: Run Super-Linter
         if: github.event_name != 'pull_request'
-        uses: github/super-linter@v5
+        uses: super-linter/super-linter@v7.1.0
         env:
           VALIDATE_YAML: true
           VALIDATE_JSON: true
