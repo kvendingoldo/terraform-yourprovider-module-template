@@ -13,11 +13,12 @@ env:
   tf_version: 1.5.7
   tflint_version: v0.54.0
   trivy_version: v0.58.2
+  enable_linters_fix_commit: "true"
 
 jobs:
   check_dco:
-    runs-on: ubuntu-latest
-    name: Check DCO
+    runs-on: ubuntu-22.04
+    name: Check DCO (Developer Certificate of Origin).
     steps:
       - name: Run dco-check
         uses: christophebedard/dco-check@0.5.0
@@ -30,9 +31,9 @@ jobs:
   super-linter:
     runs-on: ubuntu-22.04
     permissions:
-      # To write linting fixes
-      contents: write
-      # To write Super-linter status checks
+      contents: read
+      packages: read
+      # To report GitHub Actions status checks
       statuses: write
     defaults:
       run:
@@ -76,7 +77,7 @@ jobs:
           DEFAULT_BRANCH: main
           # Activate reporting to GitHub Actions status checks
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          LINTER_RULES_PATH: .github/linter-rulesg
+          LINTER_RULES_PATH: .github/linter-rules
         continue-on-error: false
 
       - name: Commit and push linting fixes
@@ -85,7 +86,8 @@ jobs:
         # - Not on the default branch
         if: >
           github.event_name == 'pull_request' &&
-          github.ref_name != github.event.repository.default_branch
+          github.ref_name != github.event.repository.default_branch &&
+          env.enable_linters_fix_commit == 'true'
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           branch: ${{ github.event.pull_request.head.ref || github.head_ref || github.ref }}
