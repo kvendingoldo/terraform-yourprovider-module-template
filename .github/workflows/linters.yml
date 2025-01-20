@@ -14,6 +14,7 @@ env:
   tflint_version: v0.54.0
   trivy_version: v0.58.2
   enable_linters_fix_commit: "true"
+  default_branch: origin/main
 
 jobs:
   check_dco:
@@ -44,6 +45,21 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Set job variables
+        id: set_job_variables
+        run: |
+          if [[ "${{ env.enable_linters_fix_commit }}" = "true" ]]; then
+            echo "fix_linter_issues=true" >> $GITHUB_OUTPUT
+          else
+            echo "fix_linter_issues=false" >> $GITHUB_OUTPUT
+          fi
+
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            echo "continue_on_error=true" >> $GITHUB_OUTPUT
+          else
+            echo "continue_on_error=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Run Super-Linter
         if: github.event_name == 'pull_request'
         uses: super-linter/super-linter@v7.1.0
@@ -58,29 +74,16 @@ jobs:
           #
           # fix
           #
-          FIX_YAML_PRETTIER: ${{ env.enable_linters_fix_commit == "true" && true || false }}
-          FIX_JSON: true
-          FIX_JSON_PRETTIER: true
-          FIX_SHELL_SHFMT: true
+          FIX_YAML_PRETTIER: ${{ steps.set_version.outputs.fix_linter_issues }}
+          FIX_JSON: ${{ steps.set_version.outputs.fix_linter_issues }}
+          FIX_JSON_PRETTIER: ${{ steps.set_version.outputs.fix_linter_issues }}
+          FIX_SHELL_SHFMT: ${{ steps.set_version.outputs.fix_linter_issues }}
 
-          DEFAULT_BRANCH: origin/main
+          DEFAULT_BRANCH: ${{ env.default_branch }}
           # Activate reporting to GitHub Actions status checks
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LINTER_RULES_PATH: .github/linter-rules
-        continue-on-error: true
-
-      - name: Run Super-Linter
-        if: github.event_name != 'pull_request'
-        uses: super-linter/super-linter@v7.1.0
-        env:
-          VALIDATE_YAML: true
-          VALIDATE_JSON: true
-          VALIDATE_SHELL_SHFMT: true
-          DEFAULT_BRANCH: origin/main
-          # Activate reporting to GitHub Actions status checks
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          LINTER_RULES_PATH: .github/linter-rules
-        continue-on-error: false
+        continue-on-error: ${{ steps.set_version.outputs.continue_on_error }}
 
       - name: Commit and push linting fixes
         # Run only on:
