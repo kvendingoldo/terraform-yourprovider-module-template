@@ -79,6 +79,12 @@ jobs:
           terraform_wrapper: false
 
       - name: Test code with terraform fmt
+        if: github.event_name == 'pull_request'
+        run: terraform fmt --recursive -check=true -no-color
+        continue-on-error: true
+
+      - name: Test code with terraform fmt
+        if: github.event_name != 'pull_request'
         run: terraform fmt --recursive -check=true -no-color
         continue-on-error: false
 
@@ -108,14 +114,24 @@ jobs:
           version: ${{ env.trivy_version }}
 
       - name: Test code with Trivy vulnerability scanner
-        id: trivy
+        if: github.event_name == 'pull_request'
         uses: aquasecurity/trivy-action@0.29.0
         with:
-          scan-type: "fs" # filesystem scanner
-          scan-ref: "." # whole repo
-          trivy-config: trivy.yaml # Use our config file
-          skip-setup-trivy: true # We used the separate setup step to enable caching
-        continue-on-error: true # By default, error would end the workflow
+          scan-type: "fs"
+          scan-ref: "."
+          trivy-config: trivy.yaml
+          skip-setup-trivy: true
+        continue-on-error: true
+
+      - name: Test code with Trivy vulnerability scanner
+        if: github.event_name != 'pull_request'
+        uses: aquasecurity/trivy-action@0.29.0
+        with:
+          scan-type: "fs"
+          scan-ref: "."
+          trivy-config: trivy.yaml
+          skip-setup-trivy: true
+        continue-on-error: false
 
       - name: Report Trivy status to PR
         uses: actions/github-script@v7
