@@ -39,6 +39,7 @@ jobs:
           fetch-depth: 0
 
       - name: Run Super-Linter
+        if: github.event_name == 'pull_request'
         uses: github/super-linter@v5
         env:
           VALIDATE_YAML: true
@@ -47,6 +48,19 @@ jobs:
           # Activate reporting to GitHub Actions status checks
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LINTER_RULES_PATH: .github/linter-rules
+        continue-on-error: true
+
+      - name: Run Super-Linter
+        if: github.event_name != 'pull_request'
+        uses: github/super-linter@v5
+        env:
+          VALIDATE_YAML: true
+          VALIDATE_JSON: true
+          DEFAULT_BRANCH: main
+          # Activate reporting to GitHub Actions status checks
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LINTER_RULES_PATH: .github/linter-rules
+        continue-on-error: false
 
       - name: Commit and push linting fixes
         # Run only on:
