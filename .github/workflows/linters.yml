@@ -15,8 +15,22 @@ env:
   trivy_version: v0.58.2
 
 jobs:
+  check_dco:
+    runs-on: ubuntu-latest
+    name: Check DCO
+    steps:
+      - name: Run dco-check
+        uses: christophebedard/dco-check@0.5.0
+        with:
+          python-version: "3.12"
+          args: "--verbose"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   super-linter:
     runs-on: ubuntu-22.04
+    permissions:
+      contents: write
     defaults:
       run:
         shell: bash
@@ -27,6 +41,28 @@ jobs:
           fetch-depth: 0
 
       - name: Run Super-Linter
+        if: github.event_name == 'pull_request'
+        uses: github/super-linter@v5
+        env:
+          #
+          # validate
+          #
+          VALIDATE_YAML: true
+          VALIDATE_JSON: true
+          #
+          # fix
+          #
+          FIX_YAML_PRETTIER: true
+          FIX_JSON_PRETTIER: true
+
+          DEFAULT_BRANCH: main
+          # Activate reporting to GitHub Actions status checks
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LINTER_RULES_PATH: .github/linter-rules
+        continue-on-error: true
+
+      - name: Run Super-Linter
+        if: github.event_name != 'pull_request'
         uses: github/super-linter@v5
         env:
           VALIDATE_YAML: true
@@ -34,10 +70,26 @@ jobs:
           DEFAULT_BRANCH: main
           # Activate reporting to GitHub Actions status checks
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          LINTER_RULES_PATH: .github/linter-rules
+          LINTER_RULES_PATH: .github/linter-rulesg
+        continue-on-error: false
+
+      - name: Commit and push linting fixes
+        # Run only on:
+        # - Pull requests
+        # - Not on the default branch
+        if: >
+          github.event_name == 'pull_request' &&
+          github.ref_name != github.event.repository.default_branch
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          branch: ${{ github.event.pull_request.head.ref || github.head_ref || github.ref }}
+          commit_message: "chore: fix super-linter linting issues"
+          commit_user_name: github-actions[bot]
 
   terraform-fmt:
     runs-on: ubuntu-22.04
+    permissions:
+      contents: write
     defaults:
       run:
         shell: bash
@@ -54,11 +106,17 @@ jobs:
           terraform_wrapper: false
 
       - name: Test code with terraform fmt
+        if: github.event_name == 'pull_request'
+        run: terraform fmt --recursive -no-color
+        continue-on-error: true
+
+      - name: Test code with terraform fmt
+        if: github.event_name != 'pull_request'
         run: terraform fmt --recursive -check=true -no-color
         continue-on-error: false
 
       - name: Auto Commit Changes
-        if: steps.create_pr.outputs.pull-request-operation == 'created'
+        if: github.event_name == 'pull_request'
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "Terraform fmt"
@@ -83,14 +141,24 @@ jobs:
           version: ${{ env.trivy_version }}
 
       - name: Test code with Trivy vulnerability scanner
-        id: trivy
+        if: github.event_name == 'pull_request'
         uses: aquasecurity/trivy-action@0.29.0
         with:
-          scan-type: "fs" # filesystem scanner
-          scan-ref: "." # whole repo
-          trivy-config: trivy.yaml # Use our config file
-          skip-setup-trivy: true # We used the separate setup step to enable caching
-        continue-on-error: true # By default, error would end the workflow
+          scan-type: "fs"
+          scan-ref: "."
+          trivy-config: trivy.yaml
+          skip-setup-trivy: true
+        continue-on-error: true
+
+      - name: Test code with Trivy vulnerability scanner
+        if: github.event_name != 'pull_request'
+        uses: aquasecurity/trivy-action@0.29.0
+        with:
+          scan-type: "fs"
+          scan-ref: "."
+          trivy-config: trivy.yaml
+          skip-setup-trivy: true
+        continue-on-error: false
 
       - name: Report Trivy status to PR
         uses: actions/github-script@v7
@@ -99,7 +167,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const fs = require('fs');
-            const report = fs.readFileSync('./apps/alpha/trivy-report.txt', 'utf8');
+            const report = fs.readFileSync('./trivy-report.txt', 'utf8');
             const output = `Trivy report:
             \`\`\`\n
             ${report.length > 0 ? report : 'No issues found'}
@@ -156,8 +224,15 @@ jobs:
       - name: Test code with TFSec
         continue-on-error: true
         uses: aquasecurity/tfsec-action@v1.0.3
+        if: github.event_name != 'pull_request'
         with:
           soft_fail: true
+          github_token: ${{ github.token }}
+
+      - name: Test code with TFSec
+        uses: aquasecurity/tfsec-pr-commenter-action@v1.2.0
+        if: github.event_name == 'pull_request'
+        with:
           github_token: ${{ github.token }}
 
   checkov:
