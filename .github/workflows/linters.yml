@@ -42,8 +42,17 @@ jobs:
         if: github.event_name == 'pull_request'
         uses: github/super-linter@v5
         env:
+          #
+          # validate
+          #
           VALIDATE_YAML: true
           VALIDATE_JSON: true
+          #
+          # fix
+          #
+          FIX_YAML_PRETTIER: true
+          FIX_JSON_PRETTIER: true
+
           DEFAULT_BRANCH: main
           # Activate reporting to GitHub Actions status checks
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -59,7 +68,7 @@ jobs:
           DEFAULT_BRANCH: main
           # Activate reporting to GitHub Actions status checks
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          LINTER_RULES_PATH: .github/linter-rules
+          LINTER_RULES_PATH: .github/linter-rulesg
         continue-on-error: false
 
       - name: Commit and push linting fixes
@@ -94,7 +103,7 @@ jobs:
 
       - name: Test code with terraform fmt
         if: github.event_name == 'pull_request'
-        run: terraform fmt --recursive -check=true -no-color
+        run: terraform fmt --recursive -no-color
         continue-on-error: true
 
       - name: Test code with terraform fmt
