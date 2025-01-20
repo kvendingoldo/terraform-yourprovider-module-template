@@ -112,7 +112,7 @@ jobs:
         continue-on-error: false
 
       - name: Auto Commit Changes
-        if: steps.create_pr.outputs.pull-request-operation == 'created'
+        if: github.event_name == 'pull_request'
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "Terraform fmt"
