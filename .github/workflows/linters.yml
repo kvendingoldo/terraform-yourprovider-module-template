@@ -51,17 +51,19 @@ jobs:
           #
           # validate
           #
-          VALIDATE_YAML: true
+          VALIDATE_YAML_PRETTIER: true
           VALIDATE_JSON: true
+          VALIDATE_JSON_PRETTIER: true
           VALIDATE_SHELL_SHFMT: true
           #
           # fix
           #
-          FIX_YAML_PRETTIER: true
+          FIX_YAML_PRETTIER: ${{ env.enable_linters_fix_commit == "true" && true || false }}
+          FIX_JSON: true
           FIX_JSON_PRETTIER: true
           FIX_SHELL_SHFMT: true
 
-          DEFAULT_BRANCH: main
+          DEFAULT_BRANCH: origin/main
           # Activate reporting to GitHub Actions status checks
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LINTER_RULES_PATH: .github/linter-rules
@@ -74,7 +76,7 @@ jobs:
           VALIDATE_YAML: true
           VALIDATE_JSON: true
           VALIDATE_SHELL_SHFMT: true
-          DEFAULT_BRANCH: main
+          DEFAULT_BRANCH: origin/main
           # Activate reporting to GitHub Actions status checks
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LINTER_RULES_PATH: .github/linter-rules
